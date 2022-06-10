@@ -1,24 +1,44 @@
-import logo from './logo.svg';
-import './App.css';
+import BraftEditor from "braft-editor";
+import React, { useEffect, useState } from "react";
+import "braft-editor/dist/index.css";
+import "./App.css";
+import { Button, Form } from "antd";
 
 function App() {
+  const [update, setUpdate] = useState(BraftEditor.createEditorState(''));
+  const htmlValues = update.toHTML();
+  useEffect(() => {
+    setUpdate(
+      BraftEditor.createEditorState(
+        `<p>Here is your braft editor , You can add or delete values..</p>`
+      )
+    );
+  }, []);
+  const onFinish = (values) => {
+    console.log("values", values);
+  };
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Form onFinish={onFinish}>
+        <div className="braft-container">
+          <BraftEditor
+            value={update}
+            onChange={(event) => {
+              setUpdate(BraftEditor.createEditorState(event));
+            }}
+          ></BraftEditor>
+        </div>
+        <div className="output">
+          <h1>YOU CAN SEE THE OUTPUT IN BELOW CONTAINER</h1>
+        </div>
+        <div className="button">
+          <Button type="primary" htmlType="submit">
+            Click Here
+          </Button>
+        </div>
+        <div className="outputvalue">{htmlValues}</div>
+      </Form>
+    </>
   );
 }
 
